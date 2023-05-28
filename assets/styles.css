@@ -1,0 +1,22 @@
+body {
+    height: 100vh;
+    width: 100vh;
+    margin: 0rem;
+    overflow: hidden;
+}
+
+#forecast-track > .forecast {
+    width: 40vmin;
+    height: 56vmin;
+    object-fit: cover;
+    object-position: center;
+    display: flex-column;
+}
+
+#forecast-track {
+    display: flex;
+    gap: 4vmin;
+    position: absolute;
+    left: 50%;
+    top: 50%; transform: translate(-100%, -50%);
+}
