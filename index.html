@@ -1,53 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="assets/jass.css"> -->
-    <link rel="stylesheet" href="assets/styles.css">
     <title>Weatherly</title>
 </head>
-
 <body>
-
-    <header>
-        <h1>Weatherly</h1>
-
-    </header>
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <aside>
-                    <form id="search-form">
-                        <input type="text" id="search" placeholder="Search">
-                        <button type="submit" id="search-button">Search</button>
-                        <hr class="grp-hr">
-                        <div class="grp-list" id="history"></div>
-                    </form>
-                </aside>
-            </div>
-        </div>
-
-        <br>
-
-        <section id="current-weather" class="mt-3"></section>
-
-        <br>
-
-        <div id="forecast-track" data-mouse-down-at="0" data-prev-precentage="0">
-            <section id="forecast" class="forecast" draggable="false"></section>
-        </div>
+    <div id="search-area">
+        <input type="text" id="city-input" placeholder="Enter City">
+        <button id="search-btn">Search</button>
+        <div id="search-history"></div>
     </div>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/plugin/utc.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/plugin/timezone.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/plugin/isBetween.min.js"></script>
+    <div id="weather-display">
+        <div id="current-weather"></div>
+        <div id="forecast"></div>
+    </div>
     <script src="script.js"></script>
-    <script src="track.js"></script>
 </body>
-
 </html>
