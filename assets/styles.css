@@ -9,3 +9,21 @@ body {
     padding: 20px;
     margin-bottom: 20px;
 }
+
+#searchHistroy {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.history-btn {
+    flex: 0 0 auto;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+.history-btn:hover {
+    background-color: #ccc;
+    color: #050202;
+}
