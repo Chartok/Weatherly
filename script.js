@@ -39,7 +39,7 @@ $(document).ready(function () {
 });
 
 const getGeoCoordinates = async (cityName) => {
-    let url = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`;
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`;
     let response = await fetch(url);
     let data = await response.json();
     let lat = data[0].lat;
@@ -49,7 +49,7 @@ const getGeoCoordinates = async (cityName) => {
 }
 
 const getWeatherData = async (lat, lon) => {
-    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
     let response = await fetch(url);
     let data = await response.json();
 
@@ -66,7 +66,7 @@ const getWeatherData = async (lat, lon) => {
 }
 
 const getForecastData = async (lat, lon) => {
-    let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
     let response = await fetch(url);
     let data = await response.json();
 
