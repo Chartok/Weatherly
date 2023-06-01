@@ -1,58 +1,95 @@
-const apiKey = '8cf08a86c18fdf323a1881ae3a48adae';
+const apiKey = 'b58ac1c39182100d7b0b59aaf0a9c6d2';
+let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
 
-const cityInput = document.getElementById('city-input');
-const searchBtn = document.getElementById('search-btn');
-const searchHistory = document.getElementById('search-history');
-const currentWeather = document.getElementById('current-weather');
-const forecast = document.getElementById('forecast');
+const updateSearchHistory = () => {
+    $("#searchHistory").empty();
+    searchHistory.forEach(cityName => {
+        $("#searchHistory").append(`<button class="btn btn-light history-btn">${cityName}</button><br/>`);
+    });
+};
 
-searchBtn.addEventListener('click', () => {
-    const city = cityInput.value;
-    fetchGeoCoordinates(city)
-        .then(coords => fetchWeatherData(coords.lat, coords.lon))
-        .then(data => updateWeatherDisplay(data))
-        .catch(err => console.log(err));
+$(document).ready(function () {
+    // Populate search history on page load
+    updateSearchHistory();
+
+    // Event handler for form submission
+    $("#searchForm").on("submit", async function (event) {
+        event.preventDefault();
+        let cityName = $("#cityInput").val();
+        try {
+            await getGeoCoordinates(cityName);
+            if (!searchHistory.includes(cityName)) {
+                searchHistory.push(cityName);
+                localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+                updateSearchHistory();
+            }
+        } catch (error) {
+            console.error(`Error occurred while fetching data for ${cityName}:`, error);
+        }
+    });
+
+    // Event handler for history button clicks
+    $("#searchHistory").on("click", ".history-btn", async function () {
+        try {
+            await getGeoCoordinates($(this).text());
+        } catch (error) {
+            console.error(`Error occurred while fetching data for ${$(this).text()}:`, error);
+        }
+    });
 });
 
-function fetchGeoCoordinates(city) {
-    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apiKey}`;
-    return fetch(url)
-        .then(response => response.json())
-        .then(data => data[0])
-        .catch(err => console.log(err));
+const getGeoCoordinates = async (cityName) => {
+    let url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`;
+    let response = await fetch(url);
+    let data = await response.json();
+    let lat = data[0].lat;
+    let lon = data[0].lon;
+    await getWeatherData(lat, lon);
+    await getForecastData(lat, lon);
 }
 
-function fetchWeatherData(lat, lon) {
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
-    return fetch(url)
-        .then(response => response.json())
-        .catch(err => console.log(err));
+const getWeatherData = async (lat, lon) => {
+    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    let response = await fetch(url);
+    let data = await response.json();
+
+    // Display current weather data
+    let currentWeather = data.current;
+    $("#currentWeather").html(`
+    <h2>${new Date(currentWeather.dt * 1000).toLocaleDateString()}
+        <img src="http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png" alt="Weather icon">
+    </h2>
+    <p>Temperature: ${currentWeather.temp}&#176;F</p>
+    <p>Humidity: ${currentWeather.humidity}%</p>
+    <p>Wind Speed: ${currentWeather.wind_speed} MPH</p>
+`);
 }
 
-function updateWeatherDisplay(data) {
-    const { current, daily } = data;
-    const { temp, humidity, wind_speed, uvi } = current;
-    const dt = new Date(daily[0].dt * 1000);
-    const day = dt.getDate();
-    const month = dt.getMonth() + 1;
-    const year = dt.getFullYear();
-    const icon = current.weather[0].icon;
-    const description = current.weather[0].description;
-    const max = daily[0].temp.max;
-    const min = daily[0].temp.min;
+const getForecastData = async (lat, lon) => {
+    let url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    let response = await fetch(url);
+    let data = await response.json();
 
-    currentWeather.innerHTML = `
-        <h2>${day}/${month}/${year}</h2>
-        <h2>${description}</h2>
-        <img src="http://openweathermap.org/img/wn/${icon}.png" alt="${description}">
-        <h2>Temp: ${temp}°C</h2>
-        <h2>Humidity: ${humidity}%</h2>
-        <h2>Wind Speed: ${wind_speed}m/s</h2>
-        <h2>UV Index: ${uvi}</h2>
-    `;
-    forecast.innerHTML = `
-        <h2>Forecast</h2>
-        <h3>Max: ${max}°C</h3>
-        <h3>Min: ${min}°C</h3>
-    `;
+    // Display 5-day forecast
+    $("#forecastWeather").empty();
+    for (let i = 0; i < data.list.length; i += 8) { // 5-day forecast, 3-hour data points
+        let forecast = data.list[i];
+        $("#forecastWeather").append(`
+    <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">${new Date(
+            forecast.dt * 1000
+        ).toLocaleDateString()}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+            <img src="http://openweathermap.org/img/wn/${
+            forecast.weather[0].icon
+            }.png" alt="Weather icon">
+        </h6>
+        <p class="card-text">Temp: ${forecast.main.temp}&#176;F</p>
+        <p class="card-text">Humidity: ${forecast.main.humidity}%</p>
+        <p class="card-text">Wind Speed: ${forecast.wind.speed} MPH</p>
+        </div>
+    </div>
+`);
+    }
 }
