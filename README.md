@@ -3,7 +3,7 @@
 
 ## Description
 
-  Use a simple weather dashboard to search for weather in any city.
+  Use a simple weather dashboard to search current and 5-day weather forecast in any city.
 
 ## Table of Contents
 
@@ -28,7 +28,7 @@
 
 ## Preview
 
-  ![Weatherly](./assets/images/weatherly.png)
+  ![Weatherly](/assets/weather-dashboard.jpg)
 
 ## License
 
