@@ -20,7 +20,7 @@
 
 ## Usage
 
-  To use follow this link: [Weatherly]()
+  To use follow this link: [Weatherly](https://chartok.github.io/Weatherly/)
 
 ## Contributing
 
