@@ -39,7 +39,7 @@ $(document).ready(function () {
 });
 
 const getGeoCoordinates = async (cityName) => {
-    let url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`;
+    let url = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`;
     let response = await fetch(url);
     let data = await response.json();
     let lat = data[0].lat;
@@ -57,7 +57,7 @@ const getWeatherData = async (lat, lon) => {
     let currentWeather = data.current;
     $("#currentWeather").html(`
     <h2>${new Date(currentWeather.dt * 1000).toLocaleDateString()}
-        <img src="http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png" alt="Weather icon">
+        <img src="https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png" alt="Weather icon">
     </h2>
     <p>Temperature: ${currentWeather.temp}&#176;F</p>
     <p>Humidity: ${currentWeather.humidity}%</p>
@@ -66,7 +66,7 @@ const getWeatherData = async (lat, lon) => {
 }
 
 const getForecastData = async (lat, lon) => {
-    let url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
     let response = await fetch(url);
     let data = await response.json();
 
@@ -81,7 +81,7 @@ const getForecastData = async (lat, lon) => {
             forecast.dt * 1000
         ).toLocaleDateString()}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
-            <img src="http://openweathermap.org/img/wn/${
+            <img src="https://openweathermap.org/img/wn/${
             forecast.weather[0].icon
             }.png" alt="Weather icon">
         </h6>
